@@ -3,23 +3,29 @@
 #include<iostream>
 #include<string>
 #include<vector>
-#include"blif_common.h"
+
+extern "C" {
+	#include"blif_common.h"
+	#include"cubical_function_representation.h"
+}
 
 using namespace std;
 
-enum literal_type { LITERAL0 = 0, LITERAL1 = 1, LITERALX = -1 };
+enum literal_type { LITERAL0, LITERAL1, LITERALX };
 
 class cube {
 	friend class cubical_function;
 	friend class logic_circuit;
 private:
-	vector<literal_type> signals;
+	vector<literal_type> literals;
+	bool is_DC;
 public:
-	cube();
-	cube(t_blif_cube* c);
+	cube() {}
+	cube(t_blif_cube* c, int input_count);
 	~cube();
-	int read_variable();
-	void write_variable();
+	literal_type int_2_literal(int i);
+	//int read_variable();
+	//void write_variable();
 	void print();
 };
 
@@ -34,7 +40,7 @@ private:
 	int index;
 	t_signal_type type;
 public:
-	cubical_signal();
+	cubical_signal() {}
 	cubical_signal(t_blif_signal *s);
 	~cubical_signal();
 };
@@ -42,8 +48,6 @@ public:
 class cubical_function {
 	friend class logic_circuit;
 private:
-	//int input_count;/* Number of inputs to the function */
-
 	vector<cubical_signal*> inputs;	/* List of input signals */
 
 	cubical_signal* output;	/* Logic function output */
@@ -51,9 +55,9 @@ private:
 	vector<cube*> set_of_cubes; /* Set of cubes */
 
 	int value;	/* If there are no cubes then this stores the constant value the function evaluates to. Otherwise, should be < 0 */
-
 public:
-	cubical_function();
+	cubical_function() {}
+	cubical_function(s_blif_cubical_function* f);
 	~cubical_function();
 	void print();
 };
@@ -68,9 +72,9 @@ private:
 
 	vector<cubical_signal*> internal_signals;
 
-	vector<cubical_function*> list_of_functions;
-public:
-	logic_circuit(string n) { name = n; }
+public:vector<cubical_function*> list_of_functions;
+	logic_circuit() {}
+	logic_circuit(char* filename);
 	~logic_circuit();
-	void ReadBlifFile(char* filename);
+	void read_file(char* filename);
 };
