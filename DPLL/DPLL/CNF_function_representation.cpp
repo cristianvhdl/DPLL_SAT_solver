@@ -62,12 +62,22 @@ CNF_function::CNF_function(char * filename) {
 	blif_circuit = ReadBLIFCircuit(filename);
 	if (blif_circuit != NULL) {
 		s_blif_cubical_function* function = blif_circuit->list_of_functions[0];
+		
 		for (int i1 = 0; i1 < function->input_count; ++i1) {
 			inputs.push_back(new CNF_variable((function->inputs)[i1], string(blif_circuit->primary_inputs[i1]->data.name)));
+			sorted_variables.push_back(inputs[i1]);
 		}
 		output = new CNF_variable(function->output, string(blif_circuit->primary_outputs[0]->data.name));
+		
 		for (int i2 = 0; i2 < function->cube_count; ++i2) {
-			set_of_cubes.push_back(new clause(function->set_of_cubes[i2], function->input_count));
+			t_blif_cube* cube= function->set_of_cubes[i2];
+			set_of_clauses.push_back(new clause(cube, function->input_count));
+			for (int j = 0; j < function->input_count; ++j) {
+				int lit = read_cube_literal(cube, j);
+				if (lit == 1 || lit == 2) {	//the variable is in the clause
+					inputs[j]->occurance++;
+				}
+			}
 		}
 		value = function->value;
 	}
@@ -77,12 +87,33 @@ CNF_function::CNF_function(char * filename) {
 CNF_function::~CNF_function() {
 }
 
+void CNF_function::sort_occurance() {
+	struct larger_than_occurance {
+		inline bool operator() (const CNF_variable* variable1, const CNF_variable* variable2) {
+			return (variable1->occurance > variable2->occurance);
+		}
+	};
+	sort(sorted_variables.begin(), sorted_variables.end(), larger_than_occurance());
+}
+
 void CNF_function::print() {
 	for (auto it = inputs.begin(); it < inputs.end(); it++) {
 		cout << (*it)->name << " ";
 	}
 	cout << " " << output->name << endl;
-	for (auto it = set_of_cubes.begin(); it < set_of_cubes.end(); it++) {
+	for (auto it = set_of_clauses.begin(); it < set_of_clauses.end(); it++) {
 		(*it)->print();
 	}
+}
+
+void CNF_function::DPLL_init() {
+	sort_occurance();	// sort variables based on occurance
+	cout << "Sort variables based on occurance: " << endl;
+	for (auto it = sorted_variables.begin(); it < sorted_variables.end(); it++) {
+		cout << (*it)->name << "(" << (*it)->occurance << ") ";
+	}
+}
+
+void CNF_function::DPLL_recursively(int curr_var_ind) {
+
 }

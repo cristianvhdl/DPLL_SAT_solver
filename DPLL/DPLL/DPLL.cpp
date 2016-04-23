@@ -16,12 +16,13 @@ int main(int argc, char* argv[])
 	}
 	cout << "DPLL SAT SOLVER START!" << endl;
 
-	/*	READ CIRCUIT FROM BLIF FILE	*/
+	/*	READ function FROM BLIF FILE	*/
 	cout << "READING FILE " << argv[1] << endl;
 	CNF = new CNF_function(argv[1]);
 
 	if (CNF) {
 		CNF->print();
+		CNF->DPLL_init();
 	}
 
 	return 0;
