@@ -30,9 +30,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="new_cubical_function.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="blif_common.h">
       <Filter>Header Files\BLIF_Reader</Filter>
     </ClInclude>
@@ -45,15 +42,15 @@
     <ClInclude Include="cubical_function_representation.h">
       <Filter>Header Files\BLIF_Reader</Filter>
     </ClInclude>
+    <ClInclude Include="CNF_function_representation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DPLL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="new_cubical_function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="blif_parser.c">
@@ -70,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="cubical_function_representation.c">
       <Filter>Source Files\BLIF_Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="CNF_function_representation.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

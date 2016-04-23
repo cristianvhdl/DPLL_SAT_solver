@@ -2,13 +2,13 @@
 //
 
 #include "stdafx.h"
-#include "new_cubical_function.h"
+#include "CNF_function_representation.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {	
-	logic_circuit* circuit = NULL;
+	CNF_function* CNF = NULL;
 	
 	if (argc != 2) {
 		cout << "Usage: " << argv[0] << " <source BLIF file>" << endl;
@@ -18,11 +18,10 @@ int main(int argc, char* argv[])
 
 	/*	READ CIRCUIT FROM BLIF FILE	*/
 	cout << "READING FILE " << argv[1] << endl;
-	circuit = new logic_circuit(argv[1]);
+	CNF = new CNF_function(argv[1]);
 
-	if (circuit) {
-		//cout << "NOT NULL" << endl;
-		circuit->list_of_functions[0]->print();
+	if (CNF) {
+		CNF->print();
 	}
 
 	return 0;
