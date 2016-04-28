@@ -3,6 +3,7 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<list>
 #include <algorithm>
 
 extern "C" {
@@ -54,7 +55,7 @@ private:
 
 	CNF_variable* output;	// Logic function output
 
-	vector<clause*> set_of_clauses; // Set of clauses
+	list<clause*> set_of_clauses; // Set of clauses
 
 	int value;	// If there are no clause then this stores the constant value the function evaluates to. Otherwise, should be < 0
 public:
@@ -64,7 +65,7 @@ public:
 	~CNF_function();	// destructor
 
 	int getValue() { return value; }
-	vector<clause*>* getClauses() {
+	list<clause*>* getClauses() {
 		return &set_of_clauses;
 	}
 	

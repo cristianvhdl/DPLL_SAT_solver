@@ -89,7 +89,7 @@ CNF_function::CNF_function(const CNF_function &f) {
 		inputs.push_back(*it);
 	}
 	output = f.output;
-	for (auto it = f.set_of_clauses.begin(); it < f.set_of_clauses.end(); it++) {
+	for (auto it = f.set_of_clauses.begin(); it != f.set_of_clauses.end(); it++) {
 		set_of_clauses.push_back(*it);
 	}
 	value = value;
@@ -101,7 +101,7 @@ CNF_function::~CNF_function() {
 	}
 	inputs.clear();
 	delete(output);
-	for (auto it = set_of_clauses.begin(); it < set_of_clauses.end(); it++) {
+	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
 		delete(*it);
 	}
 	set_of_clauses.clear();
@@ -122,7 +122,7 @@ void CNF_function::print() {
 		cout << (*it)->name << " ";
 	}
 	cout << " " << output->name << endl;
-	for (auto it = set_of_clauses.begin(); it < set_of_clauses.end(); it++) {
+	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
 		(*it)->print();
 	}
 }
