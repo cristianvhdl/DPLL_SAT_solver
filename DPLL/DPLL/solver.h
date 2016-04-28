@@ -6,7 +6,7 @@ class solver {
 public:
 	solver();
 	~solver();
-	void solver::DPLL_init();
-	void solver::DPLL_recursively(CNF_function *f);
+	//static void solver::DPLL_init(CNF_function &f);
+	static bool solver::DPLL_recursively(CNF_function &f);
 };
 

@@ -63,6 +63,11 @@ public:
 	CNF_function(const CNF_function &f);	// copy constructor, it copies the pointers that points to the variables and set of clause (shallow copy)
 	~CNF_function();	// destructor
 
+	int getValue() { return value; }
+	vector<clause*>* getClauses() {
+		return &set_of_clauses;
+	}
+	
 	void sort_occurance();
 	void print();
 	//void DPLL_init();

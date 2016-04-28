@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "CNF_function_representation.h"
+#include "solver.h"
 
 using namespace std;
 
@@ -19,10 +20,10 @@ int main(int argc, char* argv[])
 	/*	READ function FROM BLIF FILE	*/
 	cout << "READING FILE " << argv[1] << endl;
 	CNF = new CNF_function(argv[1]);
-	CNF_function temp = *CNF;
 
 	if (CNF) {
 		CNF->print();
+		solver::DPLL_recursively(*CNF);
 		//CNF->DPLL_init();
 	}
 
