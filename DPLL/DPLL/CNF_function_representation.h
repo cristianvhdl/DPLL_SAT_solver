@@ -49,18 +49,20 @@ public:
 class CNF_function {
 	friend class logic_circuit;
 private:
-	vector<CNF_variable*> inputs;	/* List of input variables */
+	vector<CNF_variable*> inputs;	// List of input variables
 	//vector<CNF_variable*> sorted_variables;	//sorted based on occurance, from high to low
 
-	CNF_variable* output;	/* Logic function output */
+	CNF_variable* output;	// Logic function output
 
-	vector<clause*> set_of_clauses; /* Set of clauses */
+	vector<clause*> set_of_clauses; // Set of clauses
 
-	int value;	/* If there are no clause then this stores the constant value the function evaluates to. Otherwise, should be < 0 */
+	int value;	// If there are no clause then this stores the constant value the function evaluates to. Otherwise, should be < 0
 public:
-	CNF_function();
-	CNF_function(char * filename);
-	~CNF_function();
+	CNF_function();	// default constructor
+	CNF_function(char * filename);	// constructor that read a file
+	CNF_function(const CNF_function &f);	// copy constructor, it copies the pointers that points to the variables and set of clause (shallow copy)
+	~CNF_function();	// destructor
+
 	void sort_occurance();
 	void print();
 	//void DPLL_init();

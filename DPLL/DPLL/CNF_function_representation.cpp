@@ -84,6 +84,17 @@ CNF_function::CNF_function(char * filename) {
 	DeleteBLIFCircuit(blif_circuit);
 }
 
+CNF_function::CNF_function(const CNF_function &f) {
+	for (auto it = f.inputs.begin(); it < f.inputs.end(); it++) {
+		inputs.push_back(*it);
+	}
+	output = f.output;
+	for (auto it = f.set_of_clauses.begin(); it < f.set_of_clauses.end(); it++) {
+		set_of_clauses.push_back(*it);
+	}
+	value = value;
+}
+
 CNF_function::~CNF_function() {
 	for (auto it = inputs.begin(); it < inputs.end(); it++) {
 		delete(*it);
