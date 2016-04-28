@@ -20,13 +20,11 @@ class clause {
 private:
 	vector<literal_type> literals;
 	bool is_DC;
+	literal_type int_2_literal(int i);
 public:
 	clause() {}
 	clause(t_blif_cube* c, int input_count);
 	~clause();
-	literal_type int_2_literal(int i);
-	//int read_variable();
-	//void write_variable();
 	void print();
 };
 
@@ -52,7 +50,7 @@ class CNF_function {
 	friend class logic_circuit;
 private:
 	vector<CNF_variable*> inputs;	/* List of input variables */
-	vector<CNF_variable*> sorted_variables;	//sorted based on occurance, from high to low
+	//vector<CNF_variable*> sorted_variables;	//sorted based on occurance, from high to low
 
 	CNF_variable* output;	/* Logic function output */
 
@@ -65,6 +63,6 @@ public:
 	~CNF_function();
 	void sort_occurance();
 	void print();
-	void DPLL_init();
-	void DPLL_recursively(int curr_var_ind);
+	//void DPLL_init();
+	//void DPLL_recursively(int curr_var_ind);
 };

@@ -4,7 +4,7 @@
 using namespace std;
 
 /*
-Variable
+CNF Variable
 */
 CNF_variable::CNF_variable(t_blif_signal *s, string n) {
 	name = n;
@@ -16,7 +16,7 @@ CNF_variable::~CNF_variable() {
 }
 
 /*
-clause
+CNF clause
 */
 clause::clause(t_blif_cube* c, int input_count) {
 	for (int i = 0; i < input_count; ++i) {
@@ -65,7 +65,7 @@ CNF_function::CNF_function(char * filename) {
 		
 		for (int i1 = 0; i1 < function->input_count; ++i1) {
 			inputs.push_back(new CNF_variable((function->inputs)[i1], string(blif_circuit->primary_inputs[i1]->data.name)));
-			sorted_variables.push_back(inputs[i1]);
+			//sorted_variables.push_back(inputs[i1]);
 		}
 		output = new CNF_variable(function->output, string(blif_circuit->primary_outputs[0]->data.name));
 		
@@ -85,6 +85,15 @@ CNF_function::CNF_function(char * filename) {
 }
 
 CNF_function::~CNF_function() {
+	for (auto it = inputs.begin(); it < inputs.end(); it++) {
+		delete(*it);
+	}
+	inputs.clear();
+	delete(output);
+	for (auto it = set_of_clauses.begin(); it < set_of_clauses.end(); it++) {
+		delete(*it);
+	}
+	set_of_clauses.clear();
 }
 
 void CNF_function::sort_occurance() {
@@ -93,7 +102,8 @@ void CNF_function::sort_occurance() {
 			return (variable1->occurance > variable2->occurance);
 		}
 	};
-	sort(sorted_variables.begin(), sorted_variables.end(), larger_than_occurance());
+	//sort(sorted_variables.begin(), sorted_variables.end(), larger_than_occurance());
+	sort(inputs.begin(), inputs.end(), larger_than_occurance());
 }
 
 void CNF_function::print() {
@@ -104,16 +114,4 @@ void CNF_function::print() {
 	for (auto it = set_of_clauses.begin(); it < set_of_clauses.end(); it++) {
 		(*it)->print();
 	}
-}
-
-void CNF_function::DPLL_init() {
-	sort_occurance();	// sort variables based on occurance
-	cout << "Sort variables based on occurance: " << endl;
-	for (auto it = sorted_variables.begin(); it < sorted_variables.end(); it++) {
-		cout << (*it)->name << "(" << (*it)->occurance << ") ";
-	}
-}
-
-void CNF_function::DPLL_recursively(int curr_var_ind) {
-
 }

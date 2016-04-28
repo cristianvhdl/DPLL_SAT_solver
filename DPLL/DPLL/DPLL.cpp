@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 
 	if (CNF) {
 		CNF->print();
-		CNF->DPLL_init();
+		//CNF->DPLL_init();
 	}
 
 	return 0;

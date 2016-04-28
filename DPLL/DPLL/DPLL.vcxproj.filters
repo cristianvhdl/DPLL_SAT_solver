@@ -45,6 +45,9 @@
     <ClInclude Include="CNF_function_representation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="solver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -69,6 +72,9 @@
       <Filter>Source Files\BLIF_Reader</Filter>
     </ClCompile>
     <ClCompile Include="CNF_function_representation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
