@@ -65,12 +65,15 @@ public:
 	~CNF_function();	// destructor
 
 	int getValue() { return value; }
-	list<clause*>* getClauses() {
-		return &set_of_clauses;
-	}
+	//list<clause*>* getClauses() { return &set_of_clauses; }
+	void setInputVar(int var_ind, bool valuation);
+
+	void resolve(int var_ind);
+	bool inputs_is_empty() { return inputs.empty(); }
+	bool clauses_is_empty() { return set_of_clauses.empty(); }
 	
 	void sort_occurance();
 	void print();
-	//void DPLL_init();
-	//void DPLL_recursively(int curr_var_ind);
+	void print_result(bool satisfiable);
+	void clear();
 };

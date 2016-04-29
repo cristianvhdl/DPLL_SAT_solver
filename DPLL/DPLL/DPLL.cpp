@@ -23,8 +23,9 @@ int main(int argc, char* argv[])
 
 	if (CNF) {
 		CNF->print();
-		solver::DPLL_recursively(*CNF);
-		//CNF->DPLL_init();
+		bool satisfiable = solver::DPLL_recursively(*CNF);
+		CNF->print_result(satisfiable);
+		CNF->clear();
 	}
 
 	return 0;

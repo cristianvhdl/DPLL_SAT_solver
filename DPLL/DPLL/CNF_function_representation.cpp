@@ -95,16 +95,27 @@ CNF_function::CNF_function(const CNF_function &f) {
 	value = value;
 }
 
-CNF_function::~CNF_function() {
-	for (auto it = inputs.begin(); it < inputs.end(); it++) {
-		delete(*it);
+CNF_function::~CNF_function() {	
+	//because the copy constructor above uses shallow copy, the memeory doesn't need to be deallocated here, please call clear() to release memory before exit the program
+}
+
+void CNF_function::setInputVar(int var_ind, bool valuation) {
+	inputs[var_ind]->curr_valuation = valuation;
+}
+
+void CNF_function::resolve(int var_ind) {
+	int literal_ind = inputs[var_ind]->index;
+	bool valuation = inputs[var_ind]->curr_valuation;
+	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {
+		if (((*it)->literals[literal_ind] == literal_type::LITERAL0 && !valuation) ||
+			((*it)->literals[literal_ind] == literal_type::LITERAL1 && valuation)){
+			it = set_of_clauses.erase(it);	// remove the clause
+		} else {
+			++it;
+		}
 	}
-	inputs.clear();
-	delete(output);
-	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
-		delete(*it);
-	}
-	set_of_clauses.clear();
+	inputs.erase(inputs.begin() + var_ind);
+
 }
 
 void CNF_function::sort_occurance() {
@@ -125,4 +136,28 @@ void CNF_function::print() {
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
 		(*it)->print();
 	}
+}
+
+void CNF_function::print_result(bool satisfiable) {
+	if (satisfiable) {
+		cout << endl << "Solution Found: " << endl;
+		for (auto it = inputs.begin(); it < inputs.end(); it++) {
+			cout << (*it)->name << "(" << (*it)->curr_valuation << ") ";
+		}
+		cout << endl;
+	} else {
+		cout << endl << "Solution NOT Found" << endl;
+	}
+}
+
+void CNF_function::clear() {
+	for (auto it = inputs.begin(); it < inputs.end(); it++) {
+		delete(*it);
+	}
+	inputs.clear();
+	delete(output);
+	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
+		delete(*it);
+	}
+	set_of_clauses.clear();
 }
