@@ -103,9 +103,9 @@ void CNF_function::setInputVar(int var_ind, bool valuation) {
 	inputs[var_ind]->curr_valuation = valuation;
 }
 
-void CNF_function::resolve(int var_ind) {
+vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
-	bool valuation = inputs[var_ind]->curr_valuation;
+	inputs[var_ind]->curr_valuation = valuation;
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {
 		if (((*it)->literals[literal_ind] == literal_type::LITERAL0 && !valuation) ||
 			((*it)->literals[literal_ind] == literal_type::LITERAL1 && valuation)){
@@ -114,8 +114,35 @@ void CNF_function::resolve(int var_ind) {
 			++it;
 		}
 	}
-	inputs.erase(inputs.begin() + var_ind);
+	auto it = inputs.erase(inputs.begin() + var_ind);
+	return it;
+}
 
+void CNF_function::find_and_resolve_pure_literals() {
+	int var_ind = 0;
+	for (auto it = inputs.begin(); it != inputs.end();) {
+		int literal_ind = (*it)->index;
+		literal_type first = literal_type::LITERALX;
+		bool find_pure_literal = true;
+		for (auto it1 = set_of_clauses.begin(); it1 != set_of_clauses.end();++it1) {
+			if (it1 == set_of_clauses.begin()) {
+				first = (*it1)->literals[literal_ind];
+			} else {
+				if (first != (*it1)->literals[literal_ind]) {
+					find_pure_literal = false;
+					break;
+				}
+			}
+		}
+		if (!clauses_is_empty() && find_pure_literal) {
+			cout << "Find Pure Literal: " << (*it)->name << endl;
+			bool valuation = (first == literal_type::LITERAL1 ? true:false);
+			it = resolve(var_ind, valuation);
+		} else {
+			++var_ind;
+			++it;
+		}
+	}
 }
 
 void CNF_function::sort_occurance() {

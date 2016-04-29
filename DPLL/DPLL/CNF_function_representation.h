@@ -68,7 +68,8 @@ public:
 	//list<clause*>* getClauses() { return &set_of_clauses; }
 	void setInputVar(int var_ind, bool valuation);
 
-	void resolve(int var_ind);
+	vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation);
+	void find_and_resolve_pure_literals();
 	bool inputs_is_empty() { return inputs.empty(); }
 	bool clauses_is_empty() { return set_of_clauses.empty(); }
 	
