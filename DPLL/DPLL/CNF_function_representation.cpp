@@ -84,7 +84,7 @@ CNF_function::CNF_function(char * filename) {
 	DeleteBLIFCircuit(blif_circuit);
 }
 
-CNF_function::CNF_function(const CNF_function &f) {
+CNF_function::CNF_function(const CNF_function &f) {	// copy constructor
 	for (auto it = f.inputs.begin(); it < f.inputs.end(); it++) {
 		inputs.push_back(*it);
 	}
@@ -99,9 +99,9 @@ CNF_function::~CNF_function() {
 	//because the copy constructor above uses shallow copy, the memeory doesn't need to be deallocated here, please call clear() to release memory before exit the program
 }
 
-void CNF_function::setInputVar(int var_ind, bool valuation) {
-	inputs[var_ind]->curr_valuation = valuation;
-}
+//void CNF_function::setInputVar(int var_ind, bool valuation) {
+//	inputs[var_ind]->curr_valuation = valuation;
+//}
 
 vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
@@ -193,7 +193,9 @@ void CNF_function::sort_occurance() {
 
 void CNF_function::print() {
 	for (auto it = inputs.begin(); it < inputs.end(); it++) {
-		cout << (*it)->name << " ";
+		string name = (*it)->name;
+		name.append(1, ' ');
+		cout << name;
 	}
 	//cout << " " << output->name << endl;
 	if (clauses_is_empty() || inputs_is_empty()) {
@@ -205,13 +207,16 @@ void CNF_function::print() {
 			for (auto it1 = inputs.begin(); it1 < inputs.end(); it1++) {
 				int literal_ind = (*it1)->index;
 				literal_type curr = (*it)->literals[literal_ind];
+				string output = "";
 				if (curr == literal_type::LITERAL0) {
-					cout << "0  ";
+					output = "0";
 				} else if (curr == literal_type::LITERAL1) {
-					cout << "1  ";
+					output = "1";
 				} else if (curr == literal_type::LITERALX) {
-					cout << "-  ";
+					output = "-";
 				} else {}
+				output.append((*it1)->name.length(), ' ');
+				cout << output;
 			}
 			cout << endl;
 
