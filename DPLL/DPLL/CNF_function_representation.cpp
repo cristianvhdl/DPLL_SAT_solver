@@ -172,6 +172,7 @@ void CNF_function::find_and_resolve_unit_clauses() {
 			}
 		}
 		if (num_inputs_var - num_DC == 1) {	// unit_clause found
+			cout << "Unit Clause Found with Variable: " << inputs[saved_var_ind]->name;
 			resolve(saved_var_ind, valuation);
 			it = set_of_clauses.begin();
 		} else {
