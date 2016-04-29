@@ -99,10 +99,6 @@ CNF_function::~CNF_function() {
 	//because the copy constructor above uses shallow copy, the memeory doesn't need to be deallocated here, please call clear() to release memory before exit the program
 }
 
-//void CNF_function::setInputVar(int var_ind, bool valuation) {
-//	inputs[var_ind]->curr_valuation = valuation;
-//}
-
 vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
 	inputs[var_ind]->curr_valuation = valuation;

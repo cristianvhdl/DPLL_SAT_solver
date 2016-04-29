@@ -46,12 +46,10 @@ public:
 };
 
 class CNF_function {
-	friend class logic_circuit;
 private:
 	vector<CNF_variable*> inputs;	// List of input variables
-	//vector<CNF_variable*> sorted_variables;	//sorted based on occurance, from high to low
 
-	CNF_variable* output;	// Logic function output
+	CNF_variable* output;	// CNF function output
 
 	list<clause*> set_of_clauses; // Set of clauses
 
@@ -64,16 +62,14 @@ public:
 
 	int getValue() { return value; }
 	string getVarName(int ind) { return inputs[ind]->name; }
-	//list<clause*>* getClauses() { return &set_of_clauses; }
-	//void setInputVar(int var_ind, bool valuation);
 
-	vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation);
+	vector<CNF_variable*>::iterator resolve(int var_ind, bool valuation);
 	void find_and_resolve_pure_literals();
 	void find_and_resolve_unit_clauses();
 	bool inputs_is_empty() { return inputs.empty(); }
 	bool clauses_is_empty() { return set_of_clauses.empty(); }
-	
 	void sort_occurance();
+
 	void print();
 	void print_result(bool satisfiable);
 	void clear();
