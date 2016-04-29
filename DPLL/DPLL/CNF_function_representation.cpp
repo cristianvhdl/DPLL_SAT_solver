@@ -106,7 +106,7 @@ void CNF_function::setInputVar(int var_ind, bool valuation) {
 vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
 	inputs[var_ind]->curr_valuation = valuation;
-	cout << " ---Resolve Varalbe: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
+	cout << " --- Resolve Varalbe: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {
 		if (((*it)->literals[literal_ind] == literal_type::LITERAL0 && !valuation) ||
 			((*it)->literals[literal_ind] == literal_type::LITERAL1 && valuation)){
@@ -145,8 +145,36 @@ void CNF_function::find_and_resolve_pure_literals() {
 			cout << "Pure Literal Found: " << (*it)->name;
 			bool valuation = (first == literal_type::LITERAL1 ? true:false);
 			it = resolve(var_ind, valuation);	// resolve it
+			it = inputs.begin();
+			var_ind = 0;
 		} else {
 			++var_ind;
+			++it;
+		}
+	}
+}
+
+void CNF_function::find_and_resolve_unit_clauses() {
+	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {	// traverse all clauses
+		int num_inputs_var = inputs.size();
+		int num_DC = 0;
+		int var_ind = 0;
+		int saved_var_ind = 0;
+		bool valuation = false;
+		for (auto it1 = inputs.begin(); it1 != inputs.end(); ++it1, ++var_ind) {	// traverse all input variables
+			int literal_ind = (*it1)->index;
+			literal_type curr = (*it)->literals[literal_ind];
+			if (curr == literal_type::LITERALX) {
+				num_DC++;
+			} else {
+				saved_var_ind = var_ind;
+				valuation = (curr == literal_type::LITERAL1? true:false);
+			}
+		}
+		if (num_inputs_var - num_DC == 1) {	// unit_clause found
+			resolve(saved_var_ind, valuation);
+			it = set_of_clauses.begin();
+		} else {
 			++it;
 		}
 	}
@@ -193,13 +221,13 @@ void CNF_function::print() {
 
 void CNF_function::print_result(bool satisfiable) {
 	if (satisfiable) {
-		cout << endl << "Solution Found: " << endl;
+		cout << endl << "The CNF function is Satisfiable with Solution: " << endl;
 		for (auto it = inputs.begin(); it < inputs.end(); it++) {
 			cout << (*it)->name << "(" << (*it)->curr_valuation << ") ";
 		}
 		cout << endl;
 	} else {
-		cout << endl << "Solution NOT Found" << endl;
+		cout << endl << "The CNF function is Un-Satisfiable" << endl;
 	}
 }
 

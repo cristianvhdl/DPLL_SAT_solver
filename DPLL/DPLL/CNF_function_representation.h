@@ -65,11 +65,13 @@ public:
 	~CNF_function();	// destructor
 
 	int getValue() { return value; }
+	string getVarName(int ind) { return inputs[ind]->name; }
 	//list<clause*>* getClauses() { return &set_of_clauses; }
 	void setInputVar(int var_ind, bool valuation);
 
 	vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation);
 	void find_and_resolve_pure_literals();
+	void find_and_resolve_unit_clauses();
 	bool inputs_is_empty() { return inputs.empty(); }
 	bool clauses_is_empty() { return set_of_clauses.empty(); }
 	
