@@ -106,6 +106,7 @@ void CNF_function::setInputVar(int var_ind, bool valuation) {
 vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
 	inputs[var_ind]->curr_valuation = valuation;
+	cout << " ---Resolve Varalbe: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {
 		if (((*it)->literals[literal_ind] == literal_type::LITERAL0 && !valuation) ||
 			((*it)->literals[literal_ind] == literal_type::LITERAL1 && valuation)){
@@ -115,29 +116,35 @@ vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuatio
 		}
 	}
 	auto it = inputs.erase(inputs.begin() + var_ind);
+	print();
 	return it;
 }
 
 void CNF_function::find_and_resolve_pure_literals() {
 	int var_ind = 0;
-	for (auto it = inputs.begin(); it != inputs.end();) {
+	for (auto it = inputs.begin(); it != inputs.end();) {	//traverse all input variables
 		int literal_ind = (*it)->index;
 		literal_type first = literal_type::LITERALX;
 		bool find_pure_literal = true;
-		for (auto it1 = set_of_clauses.begin(); it1 != set_of_clauses.end();++it1) {
-			if (it1 == set_of_clauses.begin()) {
-				first = (*it1)->literals[literal_ind];
-			} else {
-				if (first != (*it1)->literals[literal_ind]) {
-					find_pure_literal = false;
-					break;
+		bool is_first = true;
+		for (auto it1 = set_of_clauses.begin(); it1 != set_of_clauses.end();++it1) {	//traverse all clauses
+			literal_type curr_literal = (*it1)->literals[literal_ind];
+			if (curr_literal != literal_type::LITERALX) {
+				if (is_first) {
+					first = curr_literal;
+					is_first = false;
+				} else {
+					if (curr_literal != first) {	// if find different literal value for current variable in all clauses
+						find_pure_literal = false;	// not a pure literal
+						break;
+					}
 				}
 			}
 		}
-		if (!clauses_is_empty() && find_pure_literal) {
-			cout << "Find Pure Literal: " << (*it)->name << endl;
+		if (!clauses_is_empty() && find_pure_literal) {	//if found pure literal
+			cout << "Pure Literal Found: " << (*it)->name;
 			bool valuation = (first == literal_type::LITERAL1 ? true:false);
-			it = resolve(var_ind, valuation);
+			it = resolve(var_ind, valuation);	// resolve it
 		} else {
 			++var_ind;
 			++it;
@@ -159,9 +166,28 @@ void CNF_function::print() {
 	for (auto it = inputs.begin(); it < inputs.end(); it++) {
 		cout << (*it)->name << " ";
 	}
-	cout << " " << output->name << endl;
-	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
-		(*it)->print();
+	//cout << " " << output->name << endl;
+	if (clauses_is_empty() || inputs_is_empty()) {
+		cout << endl;
+	} else {
+		cout << endl;
+		for (auto it = set_of_clauses.begin(); it != set_of_clauses.end(); it++) {
+			//(*it)->print();
+			for (auto it1 = inputs.begin(); it1 < inputs.end(); it1++) {
+				int literal_ind = (*it1)->index;
+				literal_type curr = (*it)->literals[literal_ind];
+				if (curr == literal_type::LITERAL0) {
+					cout << "0  ";
+				} else if (curr == literal_type::LITERAL1) {
+					cout << "1  ";
+				} else if (curr == literal_type::LITERALX) {
+					cout << "-  ";
+				} else {}
+			}
+			cout << endl;
+
+			//cout << (is_DC ? " -" : " 1") << endl;
+		}
 	}
 }
 
