@@ -96,11 +96,11 @@ CNF_function::~CNF_function() {
 	//because the copy constructor above uses shallow copy, the memeory doesn't need to be deallocated here, please call clear() to release memory before exit the program
 }
 
-// This function resolves one variable on all clauses in the CNF function
-vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
+// This function deduces one variable on all clauses in the CNF function
+vector<CNF_variable*>::iterator CNF_function::deduce(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
 	inputs[var_ind]->curr_valuation = valuation;
-	cout << " --- Resolve Variable: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
+	cout << " --- Deduce Variable: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {
 		if (((*it)->literals[literal_ind] == literal_type::LITERAL0 && !valuation) ||
 			((*it)->literals[literal_ind] == literal_type::LITERAL1 && valuation)){
@@ -114,8 +114,8 @@ vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuatio
 	return it;
 }
 
-//This function finds and resolves all pure literals found in the CNF function
-void CNF_function::find_and_resolve_pure_literals() {
+//This function finds and deduces all pure literals found in the CNF function
+void CNF_function::find_and_deduce_pure_literals() {
 	int var_ind = 0;
 	for (auto it = inputs.begin(); it != inputs.end();) {	//traverse all input variables
 		int literal_ind = (*it)->index;
@@ -139,7 +139,7 @@ void CNF_function::find_and_resolve_pure_literals() {
 		if (!clauses_is_empty() && find_pure_literal) {	//if found pure literal
 			cout << "Pure Literal Found: " << (*it)->name;
 			bool valuation = (first == literal_type::LITERAL1 ? true:false);
-			it = resolve(var_ind, valuation);	// resolve it
+			it = deduce(var_ind, valuation);	// deduce it
 			it = inputs.begin();
 			var_ind = 0;
 		} else {
@@ -149,8 +149,8 @@ void CNF_function::find_and_resolve_pure_literals() {
 	}
 }
 
-// This function finds and resolves all unit clauses in the CNF function
-void CNF_function::find_and_resolve_unit_clauses() {
+// This function finds and deduces all unit clauses in the CNF function
+void CNF_function::find_and_deduce_unit_clauses() {
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {	// traverse all clauses
 		int num_inputs_var = inputs.size();
 		int num_DC = 0;
@@ -169,7 +169,7 @@ void CNF_function::find_and_resolve_unit_clauses() {
 		}
 		if (num_inputs_var - num_DC == 1) {	// unit_clause found
 			cout << "Unit Clause Found with Variable: " << inputs[saved_var_ind]->name;
-			resolve(saved_var_ind, valuation);
+			deduce(saved_var_ind, valuation);
 			it = set_of_clauses.begin();
 		} else {
 			++it;

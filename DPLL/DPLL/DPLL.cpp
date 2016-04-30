@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 		solver::DPLL_init(*CNF);
 		satisfiable = solver::DPLL_recursively(*CNF);
 
-		//Print Result
+		// Print Result
 		CNF->print_result(satisfiable);
 
 		// Release Memory

@@ -4,7 +4,7 @@
 #include<string>
 #include<vector>
 #include<list>
-#include <algorithm>
+#include<algorithm>
 
 extern "C" {
 	#include"blif_common.h"
@@ -68,9 +68,9 @@ public:
 
 	string getVarName(int ind) { return inputs[ind]->name; }
 
-	vector<CNF_variable*>::iterator resolve(int var_ind, bool valuation);
-	void find_and_resolve_pure_literals();
-	void find_and_resolve_unit_clauses();
+	vector<CNF_variable*>::iterator deduce(int var_ind, bool valuation);
+	void find_and_deduce_pure_literals();
+	void find_and_deduce_unit_clauses();
 	bool inputs_is_empty() { return inputs.empty(); }
 	bool clauses_is_empty() { return set_of_clauses.empty(); }
 	void sort_occurance();
