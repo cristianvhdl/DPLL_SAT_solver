@@ -4,7 +4,7 @@
 using namespace std;
 
 /*
-CNF Variable
+------------ CNF Variable ------------ 
 */
 CNF_variable::CNF_variable(t_blif_signal *s, string n) {
 	name = n;
@@ -12,11 +12,8 @@ CNF_variable::CNF_variable(t_blif_signal *s, string n) {
 	type = s->type;
 }
 
-CNF_variable::~CNF_variable() {
-}
-
 /*
-CNF clause
+------------ CNF clause ------------
 */
 clause::clause(t_blif_cube* c, int input_count) {
 	for (int i = 0; i < input_count; ++i) {
@@ -25,9 +22,7 @@ clause::clause(t_blif_cube* c, int input_count) {
 	is_DC = c->is_DC;
 }
 
-clause::~clause() {
-}
-
+// This function converts integer to the corresponding literal_type
 literal_type clause::int_2_literal(int i) {
 	switch (i) {
 		case 1: return literal_type::LITERAL0;
@@ -37,6 +32,7 @@ literal_type clause::int_2_literal(int i) {
 	}
 }
 
+// This function prints the clause
 void clause::print() {
 	for (auto it = literals.begin(); it < literals.end(); it++) {
 		if (*it == literal_type::LITERAL0) {
@@ -52,24 +48,24 @@ void clause::print() {
 }
 
 /*
-CNF Function
+------------ CNF Function ------------ 
 */
-CNF_function::CNF_function() {
-}
 
-CNF_function::CNF_function(char * filename) {
+//This is constructor that reads the blif file
+CNF_function::CNF_function(char * filename) {	
 	t_blif_logic_circuit *blif_circuit = NULL;
-	blif_circuit = ReadBLIFCircuit(filename);
+	blif_circuit = ReadBLIFCircuit(filename);	// Read file here and itialize the t_blif_logic_circuit
+
+	//Transfer the information from t_blif_logic_cirtuit to the CNF_function object
 	if (blif_circuit != NULL) {
 		s_blif_cubical_function* function = blif_circuit->list_of_functions[0];
 		
-		for (int i1 = 0; i1 < function->input_count; ++i1) {
+		for (int i1 = 0; i1 < function->input_count; ++i1) {		// All input variables
 			inputs.push_back(new CNF_variable((function->inputs)[i1], string(blif_circuit->primary_inputs[i1]->data.name)));
-			//sorted_variables.push_back(inputs[i1]);
 		}
-		output = new CNF_variable(function->output, string(blif_circuit->primary_outputs[0]->data.name));
+		output = new CNF_variable(function->output, string(blif_circuit->primary_outputs[0]->data.name));	//output variable
 		
-		for (int i2 = 0; i2 < function->cube_count; ++i2) {
+		for (int i2 = 0; i2 < function->cube_count; ++i2) {	// cubes to clauses
 			t_blif_cube* cube= function->set_of_cubes[i2];
 			set_of_clauses.push_back(new clause(cube, function->input_count));
 			for (int j = 0; j < function->input_count; ++j) {
@@ -79,12 +75,13 @@ CNF_function::CNF_function(char * filename) {
 				}
 			}
 		}
-		value = function->value;
+		value = function->value;		
 	}
-	DeleteBLIFCircuit(blif_circuit);
+	DeleteBLIFCircuit(blif_circuit);		// Release Memory
 }
 
-CNF_function::CNF_function(const CNF_function &f) {	// copy constructor
+// copy constructor (Shallow copy)
+CNF_function::CNF_function(const CNF_function &f) {	
 	for (auto it = f.inputs.begin(); it < f.inputs.end(); it++) {
 		inputs.push_back(*it);
 	}
@@ -99,10 +96,11 @@ CNF_function::~CNF_function() {
 	//because the copy constructor above uses shallow copy, the memeory doesn't need to be deallocated here, please call clear() to release memory before exit the program
 }
 
+// This function resolves one variable on all clauses in the CNF function
 vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuation) {
 	int literal_ind = inputs[var_ind]->index;
 	inputs[var_ind]->curr_valuation = valuation;
-	cout << " --- Resolve Varalbe: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
+	cout << " --- Resolve Variable: " << inputs[var_ind]->name << " (" << valuation << ")"<< endl;
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {
 		if (((*it)->literals[literal_ind] == literal_type::LITERAL0 && !valuation) ||
 			((*it)->literals[literal_ind] == literal_type::LITERAL1 && valuation)){
@@ -116,6 +114,7 @@ vector<CNF_variable*>::iterator CNF_function::resolve(int var_ind, bool valuatio
 	return it;
 }
 
+//This function finds and resolves all pure literals found in the CNF function
 void CNF_function::find_and_resolve_pure_literals() {
 	int var_ind = 0;
 	for (auto it = inputs.begin(); it != inputs.end();) {	//traverse all input variables
@@ -150,6 +149,7 @@ void CNF_function::find_and_resolve_pure_literals() {
 	}
 }
 
+// This function finds and resolves all unit clauses in the CNF function
 void CNF_function::find_and_resolve_unit_clauses() {
 	for (auto it = set_of_clauses.begin(); it != set_of_clauses.end();) {	// traverse all clauses
 		int num_inputs_var = inputs.size();
@@ -177,16 +177,17 @@ void CNF_function::find_and_resolve_unit_clauses() {
 	}
 }
 
+// This function sorts the input variables based on their occurance
 void CNF_function::sort_occurance() {
 	struct larger_than_occurance {
 		inline bool operator() (const CNF_variable* variable1, const CNF_variable* variable2) {
 			return (variable1->occurance > variable2->occurance);
 		}
 	};
-	//sort(sorted_variables.begin(), sorted_variables.end(), larger_than_occurance());
 	sort(inputs.begin(), inputs.end(), larger_than_occurance());
 }
 
+// This function prints the CNF function
 void CNF_function::print() {
 	for (auto it = inputs.begin(); it < inputs.end(); it++) {
 		string name = (*it)->name;
@@ -221,6 +222,7 @@ void CNF_function::print() {
 	}
 }
 
+// This function prints the satisfiablilty of the function
 void CNF_function::print_result(bool satisfiable) {
 	if (satisfiable) {
 		cout << endl << "The CNF function is Satisfiable with Solution: " << endl;
@@ -233,6 +235,7 @@ void CNF_function::print_result(bool satisfiable) {
 	}
 }
 
+// This function release the memory for the CNF function
 void CNF_function::clear() {
 	for (auto it = inputs.begin(); it < inputs.end(); it++) {
 		delete(*it);
