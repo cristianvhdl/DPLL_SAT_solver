@@ -3,9 +3,9 @@ The program reads a BLIF file that contains a CNF function, and determine its sa
 
 # Instructions
 Execution Instruction (Windows): <br />
-1.	Unzip the 1773_A3.zip file, you can find a folder called DPLL_SAT_solver. Go to the sub-folder called DPLL and then Release which contains the executable file called DPLL.exe. <br />
+1.	Go to the sub-folder /DPLL/Release which contains the executable file called DPLL.exe. <br />
 2.	Open the windows command shell cmd.exe, and cd to the folder contains the DPLL.exe executable file described in step 1. <br />
-3.	Type: DPLL.exe <path to the BLIF test file>, you can find some test files in the test_nodes folder within the 1773_A3 folder. <br />
+3.	Type: DPLL.exe <path to the BLIF test file>, you can find some test files in the /test_nodes folder. <br />
 4.	The program should start, and shows the major steps it used to find the satisfiability of the CNF function. <br />
 
 Compile Instruction (Visual Studio 2015): <br />
