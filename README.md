@@ -2,6 +2,8 @@
 The program reads a BLIF file that contains a CNF function, and determine its satisfiability by using the DPLL algorithm. The program is written in C++. <br />
 
 # Instructions
+To see detailed report, please go to /Docs.
+
 Execution Instruction (Windows): <br />
 1.	Go to the sub-folder /DPLL/Release which contains the executable file called DPLL.exe. <br />
 2.	Open the windows command shell cmd.exe, and cd to the folder contains the DPLL.exe executable file described in step 1. <br />
